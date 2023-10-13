@@ -1,2 +1,2 @@
 # courseella
-Couse selling website
+Course selling website

@@ -1,6 +1,9 @@
 import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
+import "./database/index.js";
+import adminRouter from "./routes/admin.routes.js";
+// import userRouter from "./routes/user.routes.js";
 
 const app = express();
 app.use(express.json());
@@ -10,7 +13,10 @@ app.get("/", (req, res) => {
   res.send("Courseella API");
 });
 
-const port = process.env.PORT || 3000;
+app.use("/admin", adminRouter);
+// app.use("/user", userRouter);
+
+const port = process.env.PORT || 8080;
 app.listen(port, () => {
-  console.log(`server started at port ${port}.`);
+  console.log(`Server running on port ${port}.`);
 });
