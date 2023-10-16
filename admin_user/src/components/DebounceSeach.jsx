@@ -21,6 +21,7 @@ export default function DebounceSeach({ searchCallback }) {
   return (
     <div>
       <TextField
+        fullWidth
         label="Search..."
         variant="outlined"
         value={searchText}

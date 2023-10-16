@@ -13,7 +13,9 @@ export default function Course() {
     <Box sx={{ margin: "5px" }}>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <DebounceSeach searchCallback={searchApi} />
-        <Button variant="contained">Add Course</Button>
+        <Button sx={{ ml: 1 }} variant="contained">
+          Add Course
+        </Button>
       </Box>
       <Typography mt={1} variant="h5">
         {COURSES ? COURSES.length : 0} Courses

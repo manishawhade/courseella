@@ -17,11 +17,20 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { SIDEBAR_DATA } from "../constant";
+import { useRecoilValue } from "recoil";
+import { adminState } from "../store/atoms/admin";
 
 export default function Root() {
   const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const { token } = useRecoilValue(adminState);
+
+  useEffect(() => {
+    if(!token || !localStorage.getItem("token")){
+      navigate("/signin")
+    }
+  });
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -34,7 +43,11 @@ export default function Root() {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="fixed" sx={{background:"#fff",color:"black"}} open={open}>
+      <AppBar
+        position="fixed"
+        sx={{ background: "#fff", color: "black" }}
+        open={open}
+      >
         <Toolbar>
           <Box display="flex" width="100%" justifyContent="space-between">
             <div>
@@ -53,8 +66,8 @@ export default function Root() {
                 <MenuIcon />
               </IconButton>
             </div>
-            <Tooltip title="Logout" sx={{mt:1,cursor:"pointer"}}>
-              <LogoutIcon onClick={() => navigate("/signin")}/>
+            <Tooltip title="Logout" sx={{ marginY: "auto", cursor: "pointer" }}>
+              <LogoutIcon onClick={() => navigate("/signin")} />
             </Tooltip>
           </Box>
         </Toolbar>
@@ -104,8 +117,6 @@ export default function Root() {
     </Box>
   );
 }
-
-
 
 const drawerWidth = 240;
 
