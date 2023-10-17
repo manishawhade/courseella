@@ -10,7 +10,7 @@ export default function Header() {
       <CssBaseline />
       <AppBar position="fixed" style={{ background: "#fff", color: "black" }}>
         <Toolbar>
-          <Button variant="text" color="success" onClick={() => navigate("/")}>
+          <Button variant="text" color="success" >
             <Typography variant="h5">Courseella</Typography>
           </Button>
         </Toolbar>

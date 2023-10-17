@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { TextField, Button, Link } from "@mui/material";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Banner from "../components/Banner";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
@@ -13,6 +13,12 @@ export default function Signin() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const setAdminRecoil = useSetRecoilState(adminState);
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/course");
+    }
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -36,9 +42,9 @@ export default function Signin() {
           token: result.data.token,
         });
         localStorage.setItem("isLoggedIn", JSON.stringify(true));
-        localStorage.setItem("email", JSON.stringify(email));
-        localStorage.setItem("token", JSON.stringify(result.data.token));
-        navigate("/");
+        localStorage.setItem("email", email);
+        localStorage.setItem("token", result.data.token);
+        navigate("/course");
       })
       .catch((err) => {
         alert(err);

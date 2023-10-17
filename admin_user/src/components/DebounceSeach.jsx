@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { TextField } from "@mui/material";
 
-export default function DebounceSeach({ searchCallback }) {
+export default function DebounceSeach({ isDisable=false, searchCallback }) {
   const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
@@ -21,6 +21,7 @@ export default function DebounceSeach({ searchCallback }) {
   return (
     <div>
       <TextField
+        disabled={isDisable}
         fullWidth
         label="Search..."
         variant="outlined"

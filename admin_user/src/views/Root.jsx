@@ -17,7 +17,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { SIDEBAR_DATA } from "../constant";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { adminState } from "../store/atoms/admin";
 
 export default function Root() {
@@ -25,10 +25,11 @@ export default function Root() {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const { token } = useRecoilValue(adminState);
+  const setAdminRecoil = useSetRecoilState(adminState);
 
   useEffect(() => {
-    if(!token || !localStorage.getItem("token")){
-      navigate("/signin")
+    if (!token || !localStorage.getItem("token")) {
+      navigate("/signin");
     }
   });
 
@@ -38,6 +39,19 @@ export default function Root() {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("email");
+    setAdminRecoil({
+      email: "",
+      password: "",
+      isLoggedIn: false,
+      token: "",
+    });
+    navigate("/signin");
   };
 
   return (
@@ -52,7 +66,7 @@ export default function Root() {
           <Box display="flex" width="100%" justifyContent="space-between">
             <div>
               {!open && (
-                <Button variant="text" color="success" onClick={() => {}}>
+                <Button variant="text" color="success" onClick={() => navigate("/course")}>
                   <Typography variant="h5">Courseella</Typography>
                 </Button>
               )}
@@ -67,7 +81,7 @@ export default function Root() {
               </IconButton>
             </div>
             <Tooltip title="Logout" sx={{ marginY: "auto", cursor: "pointer" }}>
-              <LogoutIcon onClick={() => navigate("/signin")} />
+              <LogoutIcon onClick={handleLogout} />
             </Tooltip>
           </Box>
         </Toolbar>
@@ -86,7 +100,7 @@ export default function Root() {
         open={open}
       >
         <DrawerHeader>
-          <Button variant="text" color="success" onClick={() => navigate("/")}>
+          <Button variant="text" color="success" onClick={() => navigate("/course")}>
             <Typography variant="h5">Courseella</Typography>
           </Button>
           <IconButton onClick={handleDrawerClose}>

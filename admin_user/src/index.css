@@ -2,3 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
+img{
+    border-radius: 6px;
+}

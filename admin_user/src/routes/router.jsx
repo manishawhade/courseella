@@ -3,7 +3,9 @@ import Root from "../views/Root";
 import Signup from "../views/Signup";
 import Signin from "../views/Signin";
 import ErrorPage from "./error-page";
-import Course from "../views/Course";
+import CourseList from "../views/Course/CourseList";
+import AddCourse from "../views/Course/AddCourse";
+import EditCourse from "../views/Course/EditCourse";
 import User from "../views/User";
 import Report from "../views/Report";
 
@@ -13,7 +15,9 @@ export const router = createBrowserRouter([
     element: <Root />,
     errorElement: <ErrorPage />,
     children: [
-      { path: "/", element: <Course /> },
+      { path: "/course", element: <CourseList /> },
+      { path: "/course/add", element: <AddCourse /> },
+      { path: "/course/edit/:courseId", element: <EditCourse /> },
       { path: "/user", element: <User /> },
       { path: "/report", element: <Report /> },
     ],
