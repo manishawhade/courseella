@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Header from "../components/Header";
 import { Grid } from "@mui/material";
-import BannerIcon from "../assets/course_banner.png";
+import BannerIcon from "../assets/course_banner1.jpg";
 
 export default function Banner(props) {
   return (
