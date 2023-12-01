@@ -7,8 +7,10 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { adminState } from "../store/atoms/admin";
 import axios from "../services/axios";
+import { useSnackbar } from "notistack";
 
 export default function Signin() {
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -26,7 +28,7 @@ export default function Signin() {
     let password = passwordRef.current.value;
 
     if (email.trim() === "" || password.trim() === "") {
-      alert("Please enter email/password");
+      enqueueSnackbar("Please enter email/password", { variant: "error" });
       return;
     }
     axios
@@ -47,7 +49,7 @@ export default function Signin() {
         navigate("/course");
       })
       .catch((err) => {
-        alert(err);
+        enqueueSnackbar(err, { variant: "error" });
       });
   };
   return (

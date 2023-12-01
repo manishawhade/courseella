@@ -35,7 +35,7 @@ export default function CourseForm({ CourseData, handleSubmit }) {
 
   return (
     <Box sx={{ margin: "5px" }}>
-      <Typography variant="h5">Add Course</Typography>
+      <Typography variant="h5">{CourseData ? "Edit" : "Add"} Course</Typography>
       <Grid container mt={1}>
         <Grid
           item
@@ -89,7 +89,7 @@ export default function CourseForm({ CourseData, handleSubmit }) {
                 variant="contained"
                 onClick={handleSave}
               >
-                Save
+                {CourseData ? "Update" : "Save"}
               </Button>
             </Box>
           </Box>

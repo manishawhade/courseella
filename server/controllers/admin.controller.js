@@ -106,7 +106,7 @@ const updateCourse = (req, res) => {
 const deleteCourse = (req, res) => {
   Course.findByIdAndDelete(req.params.courseId)
     .then(() => {
-      res.status(200).json({ message: `Product deleted successfully.` });
+      res.status(200).json({ message: `Course deleted successfully.` });
     })
     .catch((err) => {
       res.status(500).json({ message: `Something went wrong` });

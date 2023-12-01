@@ -1,6 +1,6 @@
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, useStepContext } from "@mui/material";
 import { COURSES } from "../../constant";
 import CardComponent from "../../components/CardComponent";
 import DebounceSeach from "../../components/DebounceSeach";
@@ -9,11 +9,16 @@ import { useEffect, useState } from "react";
 import axios from "../../services/axios";
 import Course1 from "../../assets/course1.jpg";
 import Course2 from "../../assets/course2.jpg";
+import { useSnackbar } from "notistack";
+import AlertDialog from "../../components/AlertDialog";
 
 export default function Course() {
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [course, setcourse] = useState(null);
   const [coursetemp, setcoursetemp] = useState(null);
+  const [isOpen, setisOpen] = useState(false);
+  const [selected, setselected] = useState(null);
 
   useEffect(() => {
     axios
@@ -23,7 +28,7 @@ export default function Course() {
         setcoursetemp(result.data);
       })
       .catch((err) => {
-        alert(err);
+        enqueueSnackbar(err, { variant: "error" });
       });
   }, []);
 
@@ -36,8 +41,8 @@ export default function Course() {
           item.price.toLowerCase().includes(value)
       );
       setcoursetemp(updatedItems);
-    }else{
-      setcoursetemp([...course])
+    } else {
+      setcoursetemp([...course]);
     }
   }
 
@@ -45,50 +50,66 @@ export default function Course() {
     navigate(`/course/edit/${id}`);
   };
 
-  const handleDelete = (id) => {
+  const onClickDelete = (item) => {
+    setselected(item);
+    setisOpen(true);
+  };
+
+  const handleDelete = () => {
     axios
-      .delete(`/courses/${id}`)
+      .delete(`/courses/${selected._id}`)
       .then((result) => {
-        const updatedItems = course.filter((item) => item._id !== id);
+        const updatedItems = course.filter((item) => item._id !== selected._id);
         setcourse(updatedItems);
         setcoursetemp(updatedItems);
-        alert(result.data.message);
+        enqueueSnackbar(result.data.message, { variant: "success" });
+        setselected(null);
+        setisOpen(false);
       })
       .catch((err) => {
-        alert(err);
+        enqueueSnackbar(err, { variant: "error" });
       });
   };
 
   return (
-    <Box sx={{ margin: "5px" }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <DebounceSeach
-          isDisable={coursetemp ? false : true}
-          searchCallback={searchApi}
-        />
-        <Button
-          sx={{ ml: 1 }}
-          variant="contained"
-          onClick={() => navigate("/course/add")}
-        >
-          Add Course
-        </Button>
+    <>
+      <Box sx={{ margin: "5px" }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <DebounceSeach
+            isDisable={coursetemp ? false : true}
+            searchCallback={searchApi}
+          />
+          <Button
+            sx={{ ml: 1 }}
+            variant="contained"
+            onClick={() => navigate("/course/add")}
+          >
+            Add Course
+          </Button>
+        </Box>
+        <Typography mt={1} variant="h5">
+          {coursetemp ? coursetemp.length : 0} Courses
+        </Typography>
+        <Grid container spacing={2} mt={2}>
+          {coursetemp &&
+            coursetemp.map((item) => (
+              <Grid item key={item._id}>
+                <CardComponent
+                  {...item}
+                  handleEdit={handleEdit}
+                  handleDelete={() => onClickDelete(item)}
+                />
+              </Grid>
+            ))}
+        </Grid>
       </Box>
-      <Typography mt={1} variant="h5">
-        {coursetemp ? coursetemp.length : 0} Courses
-      </Typography>
-      <Grid container spacing={2} mt={2}>
-        {coursetemp &&
-          coursetemp.map((item) => (
-            <Grid item key={item._id}>
-              <CardComponent
-                {...item}
-                handleEdit={handleEdit}
-                handleDelete={() => handleDelete(item._id)}
-              />
-            </Grid>
-          ))}
-      </Grid>
-    </Box>
+      <AlertDialog
+        isOpen={isOpen}
+        setisOpen={setisOpen}
+        title={"Delete"}
+        description={"Are you sure?"}
+        handleYes={handleDelete}
+      />
+    </>
   );
 }

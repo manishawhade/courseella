@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import axios from "../../services/axios";
 import { useParams } from "react-router-dom";
 import CourseForm from "./CourseForm";
+import { useSnackbar } from "notistack";
 
 export default function EditCourse() {
+  const { enqueueSnackbar } = useSnackbar();
   const [cousedata, setcousedata] = useState(null);
   const { courseId } = useParams();
   useEffect(() => {
@@ -13,7 +15,7 @@ export default function EditCourse() {
         setcousedata(result.data);
       })
       .catch((err) => {
-        alert(err);
+        enqueueSnackbar(err, { variant: "error" });
       });
   }, []);
 
@@ -21,10 +23,10 @@ export default function EditCourse() {
     axios
       .put(`/courses/${courseId}`, data)
       .then((result) => {
-        alert(result.data.message);
+        enqueueSnackbar(result.data.message, { variant: "success" });
       })
       .catch((err) => {
-        alert(err);
+        enqueueSnackbar(err, { variant: "error" });
       });
   };
 
