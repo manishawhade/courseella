@@ -2,7 +2,7 @@ import Course1 from "./assets/course1.jpg";
 import Course2 from "./assets/course2.jpg";
 
 const SIDEBAR_DATA = [
-  { label: "Course", value: "" },
+  { label: "Course", value: "course" },
   { label: "User", value: "user" },
   { label: "Report", value: "report" },
 ];

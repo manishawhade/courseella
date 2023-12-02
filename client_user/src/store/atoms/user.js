@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 
-const adminState = atom({
-  key: "adminState",
+const userState = atom({
+  key: "userState",
   default: {
     email: localStorage.getItem("email"),
     username: localStorage.getItem("email")
@@ -12,4 +12,4 @@ const adminState = atom({
   },
 });
 
-export { adminState };
+export { userState };

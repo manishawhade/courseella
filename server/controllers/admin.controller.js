@@ -24,7 +24,7 @@ const signUp = async (req, res) => {
     );
     res.status(201).json({
       message: "Admin created successfully",
-      user: result,
+      // user: result,
       token: token,
     });
   } catch (error) {
@@ -40,9 +40,9 @@ const signIn = async (req, res) => {
     if (!existinguser) {
       return res.status(403).json({ message: "User not found" });
     }
-    let matchpassword = bcrypt.compare(password, existinguser.password);
+    let matchpassword = bcrypt.compareSync(password, existinguser.password);
     if (!matchpassword) {
-      return res.status(403).josn({ message: "Invalid Credentials" });
+      return res.status(403).json({ message: "Invalid Credentials" });
     }
     const token = jwt.sign(
       {
@@ -81,6 +81,7 @@ const getCourses = async (req, res) => {
     });
 };
 const addCourse = async (req, res) => {
+  console.log(req.body);
   const course = new Course(req.body);
   course
     .save()
@@ -105,7 +106,7 @@ const updateCourse = (req, res) => {
 const deleteCourse = (req, res) => {
   Course.findByIdAndDelete(req.params.courseId)
     .then(() => {
-      res.status(200).json({ message: `Product deleted successfully.` });
+      res.status(200).json({ message: `Course deleted successfully.` });
     })
     .catch((err) => {
       res.status(500).json({ message: `Something went wrong` });

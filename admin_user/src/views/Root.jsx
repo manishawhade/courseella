@@ -17,18 +17,21 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { SIDEBAR_DATA } from "../constant";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { adminState } from "../store/atoms/admin";
+import AlertDialog from "../components/AlertDialog";
 
 export default function Root() {
   const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const { token } = useRecoilValue(adminState);
+  const setAdminRecoil = useSetRecoilState(adminState);
+  const [isOpen, setisOpen] = useState(false);
 
   useEffect(() => {
-    if(!token || !localStorage.getItem("token")){
-      navigate("/signin")
+    if (!token || !localStorage.getItem("token")) {
+      navigate("/signin");
     }
   });
 
@@ -40,81 +43,118 @@ export default function Root() {
     setOpen(false);
   };
 
+  const onClickLogout = () => {
+    setisOpen(true);
+  };
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("email");
+    setAdminRecoil({
+      email: "",
+      password: "",
+      isLoggedIn: false,
+      token: "",
+    });
+    navigate("/signin");
+    setisOpen(false);
+  };
+
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{ background: "#fff", color: "black" }}
-        open={open}
-      >
-        <Toolbar>
-          <Box display="flex" width="100%" justifyContent="space-between">
-            <div>
-              {!open && (
-                <Button variant="text" color="success" onClick={() => {}}>
-                  <Typography variant="h5">Courseella</Typography>
-                </Button>
-              )}
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={handleDrawerOpen}
-                edge="start"
-                sx={{ ml: 1, ...(open && { display: "none" }) }}
+    <>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <AppBar
+          position="fixed"
+          sx={{ background: "#fff", color: "black" }}
+          open={open}
+        >
+          <Toolbar>
+            <Box display="flex" width="100%" justifyContent="space-between">
+              <div>
+                {!open && (
+                  <Button
+                    variant="text"
+                    color="success"
+                    onClick={() => navigate("/course")}
+                  >
+                    <Typography variant="h5">Courseella</Typography>
+                  </Button>
+                )}
+                <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={handleDrawerOpen}
+                  edge="start"
+                  sx={{ ml: 1, ...(open && { display: "none" }) }}
+                >
+                  <MenuIcon />
+                </IconButton>
+              </div>
+              <Tooltip
+                title="Logout"
+                sx={{ marginY: "auto", cursor: "pointer" }}
               >
-                <MenuIcon />
-              </IconButton>
-            </div>
-            <Tooltip title="Logout" sx={{ marginY: "auto", cursor: "pointer" }}>
-              <LogoutIcon onClick={() => navigate("/signin")} />
-            </Tooltip>
-          </Box>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
+                <LogoutIcon onClick={onClickLogout} />
+              </Tooltip>
+            </Box>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          sx={{
             width: drawerWidth,
-            boxSizing: "border-box",
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={open}
-      >
-        <DrawerHeader>
-          <Button variant="text" color="success" onClick={() => navigate("/")}>
-            <Typography variant="h5">Courseella</Typography>
-          </Button>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <List>
-          {SIDEBAR_DATA.map((text, index) => (
-            <ListItem key={text.value} disablePadding>
-              <ListItemButton>
-                <ListItemText
-                  primary={text.label}
-                  onClick={() => navigate(text.value)}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-      <Main open={open}>
-        <DrawerHeader />
-        <Outlet />
-      </Main>
-    </Box>
+            flexShrink: 0,
+            "& .MuiDrawer-paper": {
+              width: drawerWidth,
+              boxSizing: "border-box",
+            },
+          }}
+          variant="persistent"
+          anchor="left"
+          open={open}
+        >
+          <DrawerHeader>
+            <Button
+              variant="text"
+              color="success"
+              onClick={() => navigate("/course")}
+            >
+              <Typography variant="h5">Courseella</Typography>
+            </Button>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === "ltr" ? (
+                <ChevronLeftIcon />
+              ) : (
+                <ChevronRightIcon />
+              )}
+            </IconButton>
+          </DrawerHeader>
+          <List>
+            {SIDEBAR_DATA.map((text, index) => (
+              <ListItem key={text.value} disablePadding>
+                <ListItemButton>
+                  <ListItemText
+                    primary={text.label}
+                    onClick={() => navigate(text.value)}
+                  />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </Drawer>
+        <Main open={open}>
+          <DrawerHeader />
+          <Outlet />
+        </Main>
+      </Box>
+      <AlertDialog
+        isOpen={isOpen}
+        setisOpen={setisOpen}
+        title={"Logout"}
+        description={"Are you sure?"}
+        handleYes={handleLogout}
+      />
+    </>
   );
 }
 

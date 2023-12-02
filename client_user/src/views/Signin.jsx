@@ -1,12 +1,12 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Link, TextField, Button } from "@mui/material";
+import { TextField, Button, Link } from "@mui/material";
 import { useEffect, useRef } from "react";
 import Banner from "../components/Banner";
 import { useNavigate } from "react-router-dom";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { userState } from "../store/atoms/user";
 import axios from "../services/axios";
-import { useSetRecoilState } from "recoil";
-import { adminState } from "../store/atoms/admin";
 import { useSnackbar } from "notistack";
 
 export default function Signin() {
@@ -14,13 +14,13 @@ export default function Signin() {
   const navigate = useNavigate();
   const emailRef = useRef();
   const passwordRef = useRef();
-  const setAdminRecoil = useSetRecoilState(adminState);
+  const setUserRecoil = useSetRecoilState(userState);
 
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      navigate("/course");
-    }
-  });
+  // useEffect(() => {
+  //   if (localStorage.getItem("token")) {
+  //     navigate("/course");
+  //   }
+  // });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,12 +32,12 @@ export default function Signin() {
       return;
     }
     axios
-      .post("/signup", {
+      .post("/signin", {
         email: email,
         password: password,
       })
       .then((result) => {
-        setAdminRecoil({
+        setUserRecoil({
           email: email,
           username: email.split("@")[0].toLocaleUpperCase(),
           isLoggedIn: true,
@@ -55,7 +55,7 @@ export default function Signin() {
   return (
     <Banner>
       <Typography alignSelf={"center"} variant="h4">
-        Sign Up
+        Sign in
       </Typography>
       <Box
         sx={{
@@ -74,18 +74,18 @@ export default function Signin() {
           inputRef={passwordRef}
         />
         <Button variant="contained" onClick={handleSubmit}>
-          Sign Up
+          Sign In
         </Button>
         <Typography variant="subtitle2" gutterBottom>
-          Already have an account?{" "}
+          Dont't have an account?{" "}
           <Link
             component="button"
             variant="body2"
             onClick={() => {
-              navigate("/signin");
+              navigate("/signup");
             }}
           >
-            Sign In
+            Sign Up
           </Link>
         </Typography>
       </Box>

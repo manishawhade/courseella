@@ -1,25 +1,34 @@
 import axios from "axios";
-// import { useRecoilValue } from "recoil";
-// import { adminState } from "../store/atoms/admin";
-// import dotenv from "dotenv"
-
-// dotenv.config()
-// const {token} = useRecoilValue(adminState)
 
 const instance = axios.create({
-  baseURL: "http://localhost:3000/admin",
+  baseURL: "https://courseella-api.onrender.com/admin",
 });
 
-// console.log("axios=> ",process.env.BASE_URL);
-console.log("axios=> ",localStorage.getItem("token"));
 instance.interceptors.request.use(
   (config) => {
     if (localStorage.getItem("token")) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers["Authorization"] = `Bearer ${localStorage.getItem(
+        "token"
+      )}`;
     }
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+instance.interceptors.response.use(
+  (res) => {
+    return res;
+  },
+  (error) => {
+    if (error.response.status == 401) {
+      location.replace("/signin");
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("email");
+      localStorage.removeItem("token");
+    }
     return Promise.reject(error);
   }
 );

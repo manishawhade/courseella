@@ -6,7 +6,7 @@ import Banner from "../components/Banner";
 import { useNavigate } from "react-router-dom";
 import axios from "../services/axios";
 import { useSetRecoilState } from "recoil";
-import { adminState } from "../store/atoms/admin";
+import { userState } from "../store/atoms/user";
 import { useSnackbar } from "notistack";
 
 export default function Signin() {
@@ -14,13 +14,13 @@ export default function Signin() {
   const navigate = useNavigate();
   const emailRef = useRef();
   const passwordRef = useRef();
-  const setAdminRecoil = useSetRecoilState(adminState);
+  const setUserRecoil = useSetRecoilState(userState);
 
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      navigate("/course");
-    }
-  });
+  // useEffect(() => {
+  //   if (localStorage.getItem("token")) {
+  //     navigate("/course");
+  //   }
+  // });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -37,7 +37,7 @@ export default function Signin() {
         password: password,
       })
       .then((result) => {
-        setAdminRecoil({
+        setUserRecoil({
           email: email,
           username: email.split("@")[0].toLocaleUpperCase(),
           isLoggedIn: true,
