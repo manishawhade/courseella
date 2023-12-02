@@ -16,11 +16,11 @@ export default function Signin() {
   const passwordRef = useRef();
   const setUserRecoil = useSetRecoilState(userState);
 
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      navigate("/course");
-    }
-  });
+  // useEffect(() => {
+  //   if (localStorage.getItem("token")) {
+  //     navigate("/course");
+  //   }
+  // });
 
   const handleSubmit = (e) => {
     e.preventDefault();

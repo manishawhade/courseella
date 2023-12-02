@@ -11,8 +11,12 @@ export default function CourseForm({ CourseData, handleSubmit }) {
     title: "",
     description: "",
     price: "",
-    image: null,
+    image: 1,
   });
+  const [titleError, setTitleError] = useState(false);
+  const [descriptionError, setDescriptionError] = useState(false);
+  const [priceError, setPriceError] = useState(false);
+
   useEffect(() => {
     if (CourseData) {
       setFormData(CourseData);
@@ -26,11 +30,36 @@ export default function CourseForm({ CourseData, handleSubmit }) {
       ...formData,
       [name]: value,
     });
+    Validation(name, value);
   };
-
-  const handleSave = () => {
-    formData.image = selectedimg;
-    handleSubmit(formData);
+  function Validation(name, value) {
+    let error = false;
+    switch (name) {
+      case "title":
+        error = value.trim() === "";
+        setTitleError(error);
+        break;
+      case "description":
+        error = value.trim() === "";
+        setDescriptionError(error);
+        break;
+      case "price":
+        error = isNaN(value) || value.trim() === "";
+        setPriceError(error);
+        break;
+      default:
+        break;
+    }
+    return error;
+  }
+  const handleSave = async () => {
+    let validationResponse = await Object.keys(formData).map((x) => {
+      return Validation(x, formData[x]);
+    });
+    if (validationResponse.filter((x) => x == true).length === 0) {
+      formData.image = selectedimg;
+      handleSubmit(formData);
+    }
   };
 
   return (
@@ -62,12 +91,16 @@ export default function CourseForm({ CourseData, handleSubmit }) {
               label="Enter title"
               value={formData.title}
               onChange={handleInputChange}
+              error={titleError}
+              helperText={titleError ? "Title cannot be empty" : ""}
             />
             <TextField
               name="description"
               label="Enter description"
               value={formData.description}
               onChange={handleInputChange}
+              error={descriptionError}
+              helperText={descriptionError ? "Description cannot be empty" : ""}
             />
             <TextField
               name="price"
@@ -75,6 +108,8 @@ export default function CourseForm({ CourseData, handleSubmit }) {
               label="Enter price"
               value={formData.price}
               onChange={handleInputChange}
+              error={priceError}
+              helperText={priceError ? "Invalid price" : ""}
             />
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <Button

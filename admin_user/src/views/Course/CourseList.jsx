@@ -33,6 +33,9 @@ export default function Course() {
   }, []);
 
   function searchApi(value) {
+    if (course === null) {
+      return;
+    }
     if (value.length > 0) {
       const updatedItems = course.filter(
         (item) =>
