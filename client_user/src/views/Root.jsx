@@ -24,7 +24,7 @@ import AlertDialog from "../components/AlertDialog";
 export default function Root() {
   const navigate = useNavigate();
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const { token } = useRecoilValue(userState);
   const setAdminRecoil = useSetRecoilState(userState);
   const [isOpen, setisOpen] = useState(false);
