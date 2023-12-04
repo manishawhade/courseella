@@ -9,11 +9,10 @@ Steps to run app:-
 
 1. Clone repo
 
-2. Start server
-   Note:- Copy past below variable in .env file inside server folder
-   PORT = 3000
-   MONGODB_URL = "mongodb_url" // paste local url from monogo compass or monogo atlas
-   SECRET_KEY= "secret_key"
+2. Start server :- Copy past below variable in .env file inside server folder
+-   PORT = 3000
+-   MONGODB_URL = "mongodb_url" // paste local url from monogo compass or monogo atlas
+-   SECRET_KEY= "secret_key"
 
 - cd server
 - npm start
