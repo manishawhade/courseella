@@ -48,8 +48,12 @@ export default function Signin() {
         localStorage.setItem("token", result.data.token);
         navigate("/course");
       })
-      .catch((err) => {
-        enqueueSnackbar(err, { variant: "error" });
+      .catch(({ message, response }) => {
+        if (response.data) {
+          enqueueSnackbar(response.data.message, { variant: "error" });
+        } else {
+          enqueueSnackbar(message, { variant: "error" });
+        }
       });
   };
   return (

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "https://courseella-api.onrender.com/user",
+  baseURL: "http://localhost:3000/user",
 });
 instance.interceptors.request.use(
   (config) => {
@@ -14,6 +14,26 @@ instance.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
+  }
+);
+
+instance.interceptors.response.use(
+  (res) => {
+    return res;
+  },
+  (error) => {
+    if (error.response.status == 401) {
+      location.replace("/signin");
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("email");
+      localStorage.removeItem("token");
+    } else {
+      if (error.response.data) {
+        return Promise.reject(error.response.data.message);
+      } else {
+        return Promise.reject(error);
+      }
+    }
   }
 );
 
