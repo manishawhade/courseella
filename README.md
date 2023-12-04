@@ -5,7 +5,7 @@ Course selling website
 Admin url: https://courseella-admin.netlify.app/
 Client url: https://courseella-client.netlify.app/
 
-Step to run app:-
+Steps to run app:-
 
 1. Clone repo
 
