@@ -2,6 +2,7 @@ import { User, Course } from "../database/models.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../config/index.js";
+
 const signUp = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -63,4 +64,91 @@ const signIn = async (req, res) => {
   }
 };
 
-export { signUp, signIn };
+const getCourses = async (req, res) => {
+  Course.find({})
+    .then((result) => {
+      res.status(200).json(result);
+    })
+    .catch((err) => {
+      res.status(500).json({ message: `Something went wrong` });
+    });
+};
+
+const pusrchaseNewCourse = (req, res) => {
+  Course.findById(req.params.courseId)
+    .then((result) => {
+      User.findById(req.user.id)
+        .then((user) => {
+          if (user.purchasedCourses) {
+            if (
+              user.purchasedCourses.filter((x) => x == req.params.courseId)
+                .length > 0
+            ) {
+              return res
+                .status(400)
+                .json({ message: "Course already purchased." });
+            } else {
+              User.findByIdAndUpdate(
+                req.user.id,
+                { $push: { purchasedCourses: result._id } },
+                { new: true }
+              )
+                .then(() => {
+                  res
+                    .status(200)
+                    .json({ message: `Course pusrchased successfully.` });
+                })
+                .catch((err) => {
+                  res.status(500).json({ message: `Something went wrong` });
+                });
+            }
+          }
+        })
+        .catch((err) => {
+          res.status(500).json({ message: `Something went wrong` });
+        });
+    })
+    .catch((err) => {
+      res.status(500).json({ message: `Something went wrong` });
+    });
+};
+
+const getPurchasedCourses = async (req, res) => {
+  User.findById({ _id: req.user.id })
+    .populate("purchasedCourses")
+    .then((result) => {
+      res.status(200).json(result.purchasedCourses);
+    })
+    .catch((err) => {
+      res.status(500).json({ message: `Something went wrong` });
+    });
+};
+
+const removepusrchasedcourse = (req, res) => {
+  Course.findById(req.params.courseId)
+    .then((result) => {
+      User.findByIdAndUpdate(
+        req.user.id,
+        { $pull: { purchasedCourses: result._id } },
+        { new: true }
+      )
+        .then(() => {
+          res.status(200).json({ message: `Course deleted successfully.` });
+        })
+        .catch((err) => {
+          res.status(500).json({ message: `Something went wrong` });
+        });
+    })
+    .catch((err) => {
+      res.status(500).json({ message: `Something went wrong` });
+    });
+};
+
+export {
+  signUp,
+  signIn,
+  getCourses,
+  getPurchasedCourses,
+  pusrchaseNewCourse,
+  removepusrchasedcourse,
+};

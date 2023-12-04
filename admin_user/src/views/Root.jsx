@@ -28,6 +28,7 @@ export default function Root() {
   const { token } = useRecoilValue(adminState);
   const setAdminRecoil = useSetRecoilState(adminState);
   const [isOpen, setisOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState("course");
 
   useEffect(() => {
     if (!token || !localStorage.getItem("token")) {
@@ -132,7 +133,10 @@ export default function Root() {
           <List>
             {SIDEBAR_DATA.map((text, index) => (
               <ListItem key={text.value} disablePadding>
-                <ListItemButton>
+                <ListItemButton
+                  selected={selectedIndex === text.value}
+                  onClick={() => setSelectedIndex(text.value)}
+                >
                   <ListItemText
                     primary={text.label}
                     onClick={() => navigate(text.value)}

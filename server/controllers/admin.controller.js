@@ -81,7 +81,6 @@ const getCourses = async (req, res) => {
     });
 };
 const addCourse = async (req, res) => {
-  console.log(req.body);
   const course = new Course(req.body);
   course
     .save()

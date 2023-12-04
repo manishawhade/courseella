@@ -15,6 +15,7 @@ export default function CardComponent({
   published,
   handleEdit,
   handleDelete,
+  handlePurchase,
 }) {
   return (
     <Card sx={{ width: 245, height: "100%" }}>
@@ -38,8 +39,21 @@ export default function CardComponent({
         </Typography>
       </CardContent>
       <CardActions>
-        <Button variant="outlined" onClick={() => handleEdit(_id)}>View</Button>
-        <Button variant="outlined" onClick={handleDelete}>Delete</Button>
+        {handleEdit && (
+          <Button variant="outlined" onClick={() => handleEdit(_id)}>
+            View
+          </Button>
+        )}
+        {handleDelete && (
+          <Button variant="outlined" onClick={handleDelete}>
+            Delete
+          </Button>
+        )}
+        {handlePurchase && (
+          <Button variant="outlined" onClick={() => handlePurchase(_id)}>
+            Purchase
+          </Button>
+        )}
       </CardActions>
     </Card>
   );

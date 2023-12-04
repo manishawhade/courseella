@@ -17,4 +17,24 @@ instance.interceptors.request.use(
   }
 );
 
+instance.interceptors.response.use(
+  (res) => {
+    return res;
+  },
+  (error) => {
+    if (error.response.status == 401) {
+      location.replace("/signin");
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("email");
+      localStorage.removeItem("token");
+    } else {
+      if (error.response.data) {
+        return Promise.reject(error.response.data.message);
+      } else {
+        return Promise.reject(error);
+      }
+    }
+  }
+);
+
 export default instance;
